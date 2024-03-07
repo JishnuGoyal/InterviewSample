@@ -1,12 +1,17 @@
 package com.example.spotify
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.spotify.api.ApiServices
 import com.example.spotify.data.SpotifySharedPreferences
 import com.example.spotify.domain.AuthenticationRepository
+import com.example.spotify.model.remote.SpotifyResponse
+import com.example.spotify.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,21 +22,20 @@ class SpotifyViewModel @Inject constructor(
     private val sharedPreferences: SpotifySharedPreferences
 ) : ViewModel() {
 
+    val searchResult: MutableLiveData<Resource<SpotifyResponse>> = MutableLiveData()
 
-    fun search() = viewModelScope.launch {
+    fun search(query: String) = viewModelScope.launch {
+        searchResult.postValue(Resource.Loading())
         val token = "Bearer " + getToken()
-        val response = apiServices.search("rihanna", "album", token)
+        val response = apiServices.search(query, "album", token)
 
         if (response.isSuccessful) {
-            response.body()?.let { tokenResponse ->
-
-               Log.d("??success", tokenResponse.toString())
+            response.body()?.let { searchResponse ->
+                return@launch searchResult.postValue(Resource.Success(searchResponse))
             }
-        } else {
-            Log.d("??failure", response.toString())
         }
+        return@launch searchResult.postValue(Resource.Error(response.message()))
     }
-
 
 
     suspend fun getToken(): String {
@@ -51,8 +55,4 @@ class SpotifyViewModel @Inject constructor(
         // get-token failed. Update UI accordingly.
         return ""
     }
-
-
-
-
 }
