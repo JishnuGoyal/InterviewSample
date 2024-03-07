@@ -27,7 +27,7 @@ class SpotifyViewModel @Inject constructor(
     fun search(query: String) = viewModelScope.launch {
         searchResult.postValue(Resource.Loading())
         val token = "Bearer " + getToken()
-        val response = apiServices.search(query, "album", token)
+        val response = apiServices.search(query, "album,playlist,artist,track", token)
 
         if (response.isSuccessful) {
             response.body()?.let { searchResponse ->

@@ -21,11 +21,13 @@ import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+const val SEARCH_REQUEST_DELAY_TIME = 500L
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
 
-    val viewModel: SpotifyViewModel by activityViewModels()
+    private val viewModel: SpotifyViewModel by activityViewModels()
     private lateinit var binding: FragmentSearchBinding
+    private lateinit var adapter: SearchResultRecyclerAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +43,7 @@ class SearchFragment : Fragment() {
         binding.searchInputText.addTextChangedListener { editable ->
             job?.cancel()
             job = MainScope().launch {
-                delay(1000)
+                delay(SEARCH_REQUEST_DELAY_TIME)
                 editable?.let {
                     if(editable.toString().isNotEmpty()) {
                         viewModel.search(editable.toString())
@@ -50,9 +52,37 @@ class SearchFragment : Fragment() {
             }
         }
 
+        adapter = SearchResultRecyclerAdapter()
+        binding.searchRecyclerView.adapter = adapter
 
         viewModel.searchResult.observe(viewLifecycleOwner) {
-            Log.d("??result", it.data.toString())
+            it.data?.let { spotifyResponse ->
+                adapter.list.clear()
+                val tracks = spotifyResponse.tracks.items
+                if (tracks.isNotEmpty()) {
+                    adapter.list.add(Headers.TRACK)
+                    adapter.list.addAll(tracks)
+                }
+
+                val albums = spotifyResponse.albums.items
+                if (albums.isNotEmpty()) {
+                    adapter.list.add(Headers.ALBUM)
+                    adapter.list.addAll(albums)
+                }
+
+                val playlists = spotifyResponse.playlists.items
+                if (albums.isNotEmpty()) {
+                    adapter.list.add(Headers.PLAYLIST)
+                    adapter.list.addAll(playlists)
+                }
+
+                val artists = spotifyResponse.artists.items
+                if (artists.isNotEmpty()) {
+                    adapter.list.add(Headers.ARTIST)
+                    adapter.list.addAll(artists)
+                }
+                adapter.notifyDataSetChanged()
+            }
         }
     }
 
@@ -75,4 +105,7 @@ class SearchFragment : Fragment() {
                 }
             }
     }
+}
+enum class Headers {
+    ALBUM, TRACK, PLAYLIST, ARTIST
 }

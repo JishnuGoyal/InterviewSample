@@ -1,6 +1,12 @@
 package com.example.spotify.model.remote
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 data class SpotifyResponse(
     @SerializedName("tracks")
@@ -65,7 +71,18 @@ data class TrackItem(
     val uri: String,
     @SerializedName("is_local")
     val isLocal: Boolean
-)
+) {
+    fun listOfArtists(): String {
+        val stringBuilder = StringBuilder()
+        var size = artists.size
+        artists.forEach {
+            stringBuilder.append(it.name)
+            size--
+            if (size != 0) stringBuilder.append(", ")
+        }
+        return stringBuilder.toString()
+    }
+}
 
 data class Album(
     @SerializedName("album_type")

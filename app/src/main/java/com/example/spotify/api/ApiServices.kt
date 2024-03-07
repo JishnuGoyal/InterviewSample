@@ -13,7 +13,7 @@ interface ApiServices {
         @Query("q") query: String,
         @Query("type") type: String,
         @Header("Authorization") authorization: String,
-        @Query("limit") limit: Int = 1,
+        @Query("limit") limit: Int = 10,
     ): Response<SpotifyResponse>
 
 }
