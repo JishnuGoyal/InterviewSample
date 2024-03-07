@@ -15,6 +15,9 @@ import androidx.navigation.fragment.findNavController
 import com.example.spotify.R
 import com.example.spotify.SpotifyViewModel
 import com.example.spotify.databinding.FragmentSearchBinding
+import com.example.spotify.model.remote.AlbumItem
+import com.example.spotify.model.remote.ArtistItem
+import com.example.spotify.model.remote.PlaylistItem
 import com.example.spotify.model.remote.TrackItem
 import com.example.spotify.ui.detail.TrackDetailFragment
 import com.example.spotify.util.Resource
@@ -39,7 +42,7 @@ class SearchFragment : Fragment(), SearchResultRecyclerAdapter.SearchResultAdapt
         var job: Job? = null
         binding.searchInputText.addTextChangedListener { editable ->
             job?.cancel()
-            job = MainScope().launch {
+            job = lifecycleScope.launch {
                 delay(SEARCH_REQUEST_DELAY_TIME)
                 editable?.let {
                     if(editable.toString().isNotEmpty()) {
@@ -99,15 +102,16 @@ class SearchFragment : Fragment(), SearchResultRecyclerAdapter.SearchResultAdapt
         findNavController().navigate(R.id.action_searchFragment_to_trackDetailFragment)
     }
 
-    companion object {
-        const val TAG = "search fragment"
-        @JvmStatic
-        fun newInstance() =
-            SearchFragment().apply {
-                arguments = Bundle().apply {
+    override fun onClick(trackItem: AlbumItem) {
+        TODO("Not yet implemented")
+    }
 
-                }
-            }
+    override fun onClick(trackItem: PlaylistItem) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onClick(trackItem: ArtistItem) {
+        TODO("Not yet implemented")
     }
 }
 enum class Headers {

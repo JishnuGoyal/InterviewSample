@@ -1,5 +1,7 @@
 package com.example.spotify.model.remote
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
@@ -36,6 +38,7 @@ data class Tracks(
     val items: List<TrackItem>
 )
 
+@Entity(tableName = "tracks")
 data class TrackItem(
     @SerializedName("album")
     val album: Album,
@@ -55,6 +58,7 @@ data class TrackItem(
     val externalUrls: ExternalUrls,
     @SerializedName("href")
     val href: String,
+    @PrimaryKey
     @SerializedName("id")
     val id: String,
     @SerializedName("name")
@@ -164,6 +168,7 @@ data class Artists(
     val items: List<ArtistItem>
 )
 
+@Entity(tableName = "artists")
 data class ArtistItem(
     @SerializedName("external_urls")
     val externalUrls: ExternalUrls,
@@ -173,6 +178,7 @@ data class ArtistItem(
     val genres: List<String>,
     @SerializedName("href")
     val href: String,
+    @PrimaryKey
     @SerializedName("id")
     val id: String,
     @SerializedName("images")
@@ -211,6 +217,7 @@ data class Albums(
     val items: List<AlbumItem>
 )
 
+@Entity(tableName = "albums")
 data class AlbumItem(
     @SerializedName("album_type")
     val albumType: String,
@@ -222,6 +229,7 @@ data class AlbumItem(
     val externalUrls: ExternalUrls,
     @SerializedName("href")
     val href: String,
+    @PrimaryKey
     @SerializedName("id")
     val id: String,
     @SerializedName("images")
@@ -257,6 +265,7 @@ data class Playlists(
     val items: List<PlaylistItem>
 )
 
+@Entity(tableName = "playlists")
 data class PlaylistItem(
     @SerializedName("collaborative")
     val collaborative: Boolean,
@@ -266,6 +275,7 @@ data class PlaylistItem(
     val externalUrls: ExternalUrls,
     @SerializedName("href")
     val href: String,
+    @PrimaryKey
     @SerializedName("id")
     val id: String,
     @SerializedName("images")

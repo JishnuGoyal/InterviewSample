@@ -7,6 +7,7 @@ import coil.load
 import com.example.spotify.R
 import com.example.spotify.databinding.TrackHeaderItemViewBinding
 import com.example.spotify.databinding.TrackItemViewBinding
+import com.example.spotify.model.remote.Album
 import com.example.spotify.model.remote.AlbumItem
 import com.example.spotify.model.remote.ArtistItem
 import com.example.spotify.model.remote.PlaylistItem
@@ -23,7 +24,22 @@ class SearchResultRecyclerAdapter(private val listener: SearchResultAdapterListe
                 TrackViewHolder(binding, listener)
             }
 
+            ALBUM_VIEW_TYPE -> {
+                val binding =
+                    TrackItemViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                TrackViewHolder(binding, listener)
+            }
 
+            PLAYLIST_VIEW_TYPE -> {
+                val binding =
+                    TrackItemViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                TrackViewHolder(binding, listener)
+            }
+            ARTIST_VIEW_TYPE -> {
+                val binding =
+                    TrackItemViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                TrackViewHolder(binding, listener)
+            }
 
             else -> {
                 val binding =
@@ -42,6 +58,9 @@ class SearchResultRecyclerAdapter(private val listener: SearchResultAdapterListe
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             TRACK_VIEW_TYPE -> (holder as TrackViewHolder).bind(list[position] as TrackItem)
+            ALBUM_VIEW_TYPE -> (holder as TrackViewHolder).bind(list[position] as AlbumItem)
+            ARTIST_VIEW_TYPE -> (holder as TrackViewHolder).bind(list[position] as ArtistItem)
+            PLAYLIST_VIEW_TYPE -> (holder as TrackViewHolder).bind(list[position] as PlaylistItem)
             HEADER_VIEW_TYPE -> (holder as HeaderViewHolder).bind(list[position] as Headers)
         }
     }
@@ -66,6 +85,36 @@ class SearchResultRecyclerAdapter(private val listener: SearchResultAdapterListe
             binding.imageView.load(item.album.images.first().url)
             binding.titleTextView.text = item.name
             binding.descriptionTextView.text = item.listOfArtists()
+
+            binding.root.setOnClickListener {
+                listener.onClick(item)
+            }
+        }
+
+        fun bind(item: AlbumItem) {
+            binding.imageView.load(item.images.first().url)
+            binding.titleTextView.text = item.name
+            binding.descriptionTextView.text = item.releaseDate
+
+            binding.root.setOnClickListener {
+                listener.onClick(item)
+            }
+        }
+
+        fun bind(item: ArtistItem) {
+            binding.imageView.load(item.images.first().url)
+            binding.titleTextView.text = item.name
+            binding.descriptionTextView.text = item.genres.toString()
+
+            binding.root.setOnClickListener {
+                listener.onClick(item)
+            }
+        }
+
+        fun bind(item: PlaylistItem) {
+            binding.imageView.load(item.images.first().url)
+            binding.titleTextView.text = item.name
+            binding.descriptionTextView.text = item.owner.displayName
 
             binding.root.setOnClickListener {
                 listener.onClick(item)
@@ -100,6 +149,9 @@ class SearchResultRecyclerAdapter(private val listener: SearchResultAdapterListe
 
     interface SearchResultAdapterListener {
         fun onClick(trackItem: TrackItem)
+        fun onClick(trackItem: AlbumItem)
+        fun onClick(trackItem: PlaylistItem)
+        fun onClick(trackItem: ArtistItem)
     }
 }
 

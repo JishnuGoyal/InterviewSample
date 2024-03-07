@@ -16,17 +16,5 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        navigateToSearchFragment()
-
-    }
-
-    private fun navigateToSearchFragment() {
-//        val fragment = supportFragmentManager.findFragmentByTag(SearchFragment.TAG)
-//
-//        supportFragmentManager.beginTransaction()
-//            .replace(R.id.fragment_container_view, fragment ?: SearchFragment.newInstance())
-//            .addToBackStack(SearchFragment.TAG)
-//            .commit()
     }
 }
