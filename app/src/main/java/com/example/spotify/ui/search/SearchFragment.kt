@@ -11,9 +11,13 @@ import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.spotify.R
 import com.example.spotify.SpotifyViewModel
 import com.example.spotify.databinding.FragmentSearchBinding
+import com.example.spotify.model.remote.TrackItem
+import com.example.spotify.ui.detail.TrackDetailFragment
+import com.example.spotify.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
@@ -23,18 +27,11 @@ import kotlinx.coroutines.launch
 
 const val SEARCH_REQUEST_DELAY_TIME = 500L
 @AndroidEntryPoint
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(), SearchResultRecyclerAdapter.SearchResultAdapterListener {
 
     private val viewModel: SpotifyViewModel by activityViewModels()
     private lateinit var binding: FragmentSearchBinding
     private lateinit var adapter: SearchResultRecyclerAdapter
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -52,10 +49,11 @@ class SearchFragment : Fragment() {
             }
         }
 
-        adapter = SearchResultRecyclerAdapter()
+        adapter = SearchResultRecyclerAdapter(this)
         binding.searchRecyclerView.adapter = adapter
 
         viewModel.searchResult.observe(viewLifecycleOwner) {
+            binding.loading.visibility = View.VISIBLE
             it.data?.let { spotifyResponse ->
                 adapter.list.clear()
                 val tracks = spotifyResponse.tracks.items
@@ -82,6 +80,7 @@ class SearchFragment : Fragment() {
                     adapter.list.addAll(artists)
                 }
                 adapter.notifyDataSetChanged()
+                binding.loading.visibility = View.GONE
             }
         }
     }
@@ -93,6 +92,11 @@ class SearchFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentSearchBinding.inflate(layoutInflater, container, false)
         return binding.root
+    }
+
+    override fun onClick(trackItem: TrackItem) {
+        viewModel.trackResult.postValue(Resource.Success(trackItem))
+        findNavController().navigate(R.id.action_searchFragment_to_trackDetailFragment)
     }
 
     companion object {

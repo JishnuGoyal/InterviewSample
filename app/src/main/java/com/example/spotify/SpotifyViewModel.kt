@@ -8,6 +8,7 @@ import com.example.spotify.api.ApiServices
 import com.example.spotify.data.SpotifySharedPreferences
 import com.example.spotify.domain.AuthenticationRepository
 import com.example.spotify.model.remote.SpotifyResponse
+import com.example.spotify.model.remote.TrackItem
 import com.example.spotify.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -23,6 +24,7 @@ class SpotifyViewModel @Inject constructor(
 ) : ViewModel() {
 
     val searchResult: MutableLiveData<Resource<SpotifyResponse>> = MutableLiveData()
+    val trackResult: MutableLiveData<Resource<TrackItem>> = MutableLiveData()
 
     fun search(query: String) = viewModelScope.launch {
         searchResult.postValue(Resource.Loading())

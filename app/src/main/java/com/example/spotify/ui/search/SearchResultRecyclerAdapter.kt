@@ -12,7 +12,7 @@ import com.example.spotify.model.remote.ArtistItem
 import com.example.spotify.model.remote.PlaylistItem
 import com.example.spotify.model.remote.TrackItem
 
-class SearchResultRecyclerAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SearchResultRecyclerAdapter(private val listener: SearchResultAdapterListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val list = ArrayList<Any>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -20,7 +20,7 @@ class SearchResultRecyclerAdapter() : RecyclerView.Adapter<RecyclerView.ViewHold
             TRACK_VIEW_TYPE -> {
                 val binding =
                     TrackItemViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                TrackViewHolder(binding)
+                TrackViewHolder(binding, listener)
             }
 
 
@@ -60,12 +60,16 @@ class SearchResultRecyclerAdapter() : RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    class TrackViewHolder(private val binding: TrackItemViewBinding) :
+    class TrackViewHolder(private val binding: TrackItemViewBinding, private val listener: SearchResultAdapterListener) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: TrackItem) {
             binding.imageView.load(item.album.images.first().url)
             binding.titleTextView.text = item.name
             binding.descriptionTextView.text = item.listOfArtists()
+
+            binding.root.setOnClickListener {
+                listener.onClick(item)
+            }
         }
     }
 
@@ -92,6 +96,10 @@ class SearchResultRecyclerAdapter() : RecyclerView.Adapter<RecyclerView.ViewHold
         const val PLAYLIST_HEADER_VIEW_TYPE = 7
         const val ALBUM_HEADER_VIEW_TYPE = 8
         const val HEADER_VIEW_TYPE = 9
+    }
+
+    interface SearchResultAdapterListener {
+        fun onClick(trackItem: TrackItem)
     }
 }
 
