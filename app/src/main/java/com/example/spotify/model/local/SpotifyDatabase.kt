@@ -11,7 +11,7 @@ import com.example.spotify.model.remote.ArtistItem
 import com.example.spotify.model.remote.PlaylistItem
 import com.example.spotify.model.remote.TrackItem
 
-@Database(entities = [TrackItem::class, ArtistItem::class, PlaylistItem::class, AlbumItem::class], version = 1)
+@Database(entities = [TrackEntity::class, ArtistEntity::class, PlaylistEntity::class, AlbumEntity::class], version = 1)
 abstract class SpotifyDatabase: RoomDatabase() {
     abstract fun spotifyDao(): SpotifyDao
 }

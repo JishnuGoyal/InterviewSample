@@ -7,12 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.spotify.api.ApiServices
 import com.example.spotify.data.SpotifySharedPreferences
 import com.example.spotify.domain.AuthenticationRepository
+import com.example.spotify.domain.Repository
 import com.example.spotify.model.remote.SpotifyResponse
 import com.example.spotify.model.remote.TrackItem
 import com.example.spotify.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,6 +19,7 @@ import javax.inject.Inject
 class SpotifyViewModel @Inject constructor(
     private val apiServices: ApiServices,
     private val authenticationRepository: AuthenticationRepository,
+    private val repository: Repository,
     private val sharedPreferences: SpotifySharedPreferences
 ) : ViewModel() {
 
@@ -33,6 +33,12 @@ class SpotifyViewModel @Inject constructor(
 
         if (response.isSuccessful) {
             response.body()?.let { searchResponse ->
+                repository.deleteTracks()
+                repository.insertTracks(
+                    searchResponse.tracks.items.map {
+                        it.toEntity()
+                    }.toList()
+                )
                 return@launch searchResult.postValue(Resource.Success(searchResponse))
             }
         }
