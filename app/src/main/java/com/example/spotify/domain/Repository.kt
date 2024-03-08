@@ -12,46 +12,61 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class Repository @Inject constructor(private val dao: SpotifyDao, private val apiServices: ApiServices) {
+class Repository @Inject constructor(
+    private val dao: SpotifyDao,
+    private val apiServices: ApiServices,
+    private val authenticationRepository: AuthenticationRepository
+) {
 
     val searchResult: MutableLiveData<Resource<String>> = MutableLiveData()
-    suspend fun search(query: String, token: String) {
+    suspend fun search(query: String) {
+        val tokenResponse = authenticationRepository.getToken()
+        if (tokenResponse == "") {
+            searchResult.postValue(Resource.Error("Couldn't fetch auth token. Check Internet."))
+            return
+        }
+        val token = "Bearer " + tokenResponse
+
         searchResult.postValue(Resource.Loading())
-        val response = apiServices.search(query, "album,playlist,artist,track", token)
-        if (response.isSuccessful) {
-            searchResult.postValue(Resource.Success(""))
-            response.body()?.let { searchResponse ->
-                deleteTracks()
-                deleteAlbums()
-                deletePlaylists()
-                deleteArtists()
+        try {
+            val response = apiServices.search(query, "album,playlist,artist,track", token)
+            if (response.isSuccessful) {
+                searchResult.postValue(Resource.Success(""))
+                response.body()?.let { searchResponse ->
+                    deleteTracks()
+                    deleteAlbums()
+                    deletePlaylists()
+                    deleteArtists()
 
-                insertTracks(
-                    searchResponse.tracks.items.map {
-                        it.toEntity()
-                    }.toList()
-                )
-                insertAlbums(
-                    searchResponse.albums.items.map {
-                        it.toEntity()
-                    }.toList()
-                )
+                    insertTracks(
+                        searchResponse.tracks.items.map {
+                            it.toEntity()
+                        }.toList()
+                    )
+                    insertAlbums(
+                        searchResponse.albums.items.map {
+                            it.toEntity()
+                        }.toList()
+                    )
 
-                insertPlaylists(
-                    searchResponse.playlists.items.map {
-                        it.toEntity()
-                    }.toList()
-                )
+                    insertPlaylists(
+                        searchResponse.playlists.items.map {
+                            it.toEntity()
+                        }.toList()
+                    )
 
-                insertArtists(
-                    searchResponse.artists.items.map {
-                        it.toEntity()
-                    }.toList()
-                )
+                    insertArtists(
+                        searchResponse.artists.items.map {
+                            it.toEntity()
+                        }.toList()
+                    )
 
+                }
+            } else {
+                searchResult.postValue(Resource.Error("Couldn't find results"))
             }
-        } else {
-            searchResult.postValue(Resource.Error("Couldn't find results"))
+        } catch (e: Exception) {
+            searchResult.postValue(Resource.Error("Couldn't find results. Check Internet."))
         }
     }
 

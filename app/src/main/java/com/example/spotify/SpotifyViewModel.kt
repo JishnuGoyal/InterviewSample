@@ -3,8 +3,6 @@ package com.example.spotify
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.spotify.data.SpotifySharedPreferences
-import com.example.spotify.domain.AuthenticationRepository
 import com.example.spotify.domain.Repository
 import com.example.spotify.model.local.AlbumEntity
 import com.example.spotify.model.local.ArtistEntity
@@ -19,9 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SpotifyViewModel @Inject constructor(
-    private val authenticationRepository: AuthenticationRepository,
     private val repository: Repository,
-    private val sharedPreferences: SpotifySharedPreferences
 ) : ViewModel() {
 
     val searchResult: LiveData<Resource<String>>
@@ -41,27 +37,9 @@ class SpotifyViewModel @Inject constructor(
     var currentArtist: ArtistEntity? = null
 
     fun search(query: String) = viewModelScope.launch {
-        val token = "Bearer " + getToken()
         withContext(Dispatchers.IO) {
-            repository.search(query, token)
+            repository.search(query)
         }
     }
 
-
-    suspend fun getToken(): String {
-        sharedPreferences.getAuthToken()?.let {
-            return it
-        }
-        val response = authenticationRepository.getToken()
-        if (response.isSuccessful) {
-            response.body()?.let { tokenResponse ->
-                sharedPreferences.setAuthToken(tokenResponse)
-                return tokenResponse.accessToken
-            }
-        }
-
-        // get-token failed. Update UI accordingly.
-        repository.searchResult.postValue(Resource.Error("Couldn't fetch auth token"))
-        return ""
-    }
 }
