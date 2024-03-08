@@ -61,6 +61,7 @@ class SpotifyViewModel @Inject constructor(
         }
 
         // get-token failed. Update UI accordingly.
+        repository.searchResult.postValue(Resource.Error("Couldn't fetch auth token"))
         return ""
     }
 }
