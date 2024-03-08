@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="@dimen/item_margin">
 
     <ImageView
@@ -11,35 +11,37 @@
         android:layout_height="@dimen/thumnail_dimen"
         android:layout_margin="@dimen/item_margin"
         android:src="@drawable/ic_launcher_background"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/title_text_view"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_start"
+        android:layout_marginTop="@dimen/small_margin"
+        android:ellipsize="end"
+        android:marqueeRepeatLimit="2"
+        android:maxLines="1"
+        android:text="Hello"
         android:textSize="@dimen/normal_text"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="@id/image_view"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image_view"
-        android:text="Hello"
-        android:layout_marginStart="@dimen/margin_start"
-        android:layout_marginTop="@dimen/small_margin" />
+        app:layout_constraintTop_toTopOf="@id/image_view" />
 
     <TextView
         android:id="@+id/description_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/small_text"
-        android:textColor="@color/secondary_text_color"
-        app:layout_constraintTop_toBottomOf="@id/title_text_view"
-        app:layout_constraintStart_toEndOf="@+id/image_view"
-        android:text="Song : Adele"
         android:layout_marginStart="@dimen/margin_start"
-        android:layout_marginTop="@dimen/small_margin" />
-
-
+        android:layout_marginTop="@dimen/small_margin"
+        android:text="Song : Adele"
+        android:textColor="@color/secondary_text_color"
+        android:textSize="@dimen/small_text"
+        app:layout_constraintStart_toEndOf="@+id/image_view"
+        app:layout_constraintTop_toBottomOf="@id/title_text_view" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

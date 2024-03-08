@@ -1,6 +1,7 @@
 package com.example.spotify
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +9,7 @@ import com.example.spotify.api.ApiServices
 import com.example.spotify.data.SpotifySharedPreferences
 import com.example.spotify.domain.AuthenticationRepository
 import com.example.spotify.domain.Repository
+import com.example.spotify.model.local.TrackEntity
 import com.example.spotify.model.remote.SpotifyResponse
 import com.example.spotify.model.remote.TrackItem
 import com.example.spotify.util.Resource
@@ -25,6 +27,7 @@ class SpotifyViewModel @Inject constructor(
 
     val searchResult: MutableLiveData<Resource<SpotifyResponse>> = MutableLiveData()
     val trackResult: MutableLiveData<Resource<TrackItem>> = MutableLiveData()
+    val trackLiveData = repository.getTracks()
 
     fun search(query: String) = viewModelScope.launch {
         searchResult.postValue(Resource.Loading())

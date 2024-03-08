@@ -14,7 +14,7 @@ class Repository @Inject constructor(private val dao: SpotifyDao) {
         }
     }
 
-    suspend fun getTracks() = dao.getAllTracks()
+    fun getTracks() = dao.getAllTracks()
 
     suspend fun deleteTracks() = dao.deleteTracks()
 

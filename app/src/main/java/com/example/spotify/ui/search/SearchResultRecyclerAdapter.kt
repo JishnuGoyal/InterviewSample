@@ -7,6 +7,7 @@ import coil.load
 import com.example.spotify.R
 import com.example.spotify.databinding.TrackHeaderItemViewBinding
 import com.example.spotify.databinding.TrackItemViewBinding
+import com.example.spotify.model.local.TrackEntity
 import com.example.spotify.model.remote.Album
 import com.example.spotify.model.remote.AlbumItem
 import com.example.spotify.model.remote.ArtistItem
@@ -57,7 +58,7 @@ class SearchResultRecyclerAdapter(private val listener: SearchResultAdapterListe
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
-            TRACK_VIEW_TYPE -> (holder as TrackViewHolder).bind(list[position] as TrackItem)
+            TRACK_VIEW_TYPE -> (holder as TrackViewHolder).bind(list[position] as TrackEntity)
             ALBUM_VIEW_TYPE -> (holder as TrackViewHolder).bind(list[position] as AlbumItem)
             ARTIST_VIEW_TYPE -> (holder as TrackViewHolder).bind(list[position] as ArtistItem)
             PLAYLIST_VIEW_TYPE -> (holder as TrackViewHolder).bind(list[position] as PlaylistItem)
@@ -67,7 +68,7 @@ class SearchResultRecyclerAdapter(private val listener: SearchResultAdapterListe
 
     override fun getItemViewType(position: Int): Int {
         return when (list[position]) {
-            is TrackItem -> TRACK_VIEW_TYPE
+            is TrackEntity -> TRACK_VIEW_TYPE
             is AlbumItem -> ALBUM_VIEW_TYPE
             is PlaylistItem -> PLAYLIST_VIEW_TYPE
             is ArtistItem -> ARTIST_VIEW_TYPE
@@ -81,10 +82,10 @@ class SearchResultRecyclerAdapter(private val listener: SearchResultAdapterListe
 
     class TrackViewHolder(private val binding: TrackItemViewBinding, private val listener: SearchResultAdapterListener) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: TrackItem) {
-            binding.imageView.load(item.album.images.first().url)
+        fun bind(item: TrackEntity) {
+            binding.imageView.load(item.thumbnailUrl)
             binding.titleTextView.text = item.name
-            binding.descriptionTextView.text = item.listOfArtists()
+            binding.descriptionTextView.text = item.artists
 
             binding.root.setOnClickListener {
                 listener.onClick(item)
@@ -148,10 +149,11 @@ class SearchResultRecyclerAdapter(private val listener: SearchResultAdapterListe
     }
 
     interface SearchResultAdapterListener {
-        fun onClick(trackItem: TrackItem)
+//        fun onClick(trackItem: TrackItem)
         fun onClick(trackItem: AlbumItem)
         fun onClick(trackItem: PlaylistItem)
         fun onClick(trackItem: ArtistItem)
+        fun onClick(item: TrackEntity)
     }
 }
 
