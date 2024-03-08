@@ -110,17 +110,17 @@ class SearchFragment : Fragment(), SearchResultRecyclerAdapter.SearchResultAdapt
 
     override fun onClick(albumItem: AlbumEntity) {
         viewModel.currentAlbum = albumItem
-        findNavController().navigate(R.id.action_searchFragment_to_trackDetailFragment)
+        findNavController().navigate(R.id.action_searchFragment_to_albumDetailFragment)
     }
 
     override fun onClick(playlistItem: PlaylistEntity) {
         viewModel.currentPlaylist = playlistItem
-        findNavController().navigate(R.id.action_searchFragment_to_trackDetailFragment)
+        findNavController().navigate(R.id.action_searchFragment_to_playlistDetailFragment)
     }
 
     override fun onClick(artistItem: ArtistEntity) {
         viewModel.currentArtist = artistItem
-        findNavController().navigate(R.id.action_searchFragment_to_trackDetailFragment)
+        findNavController().navigate(R.id.action_searchFragment_to_artistDetailFragment)
     }
 
     override fun onClick(trackItem: TrackEntity) {

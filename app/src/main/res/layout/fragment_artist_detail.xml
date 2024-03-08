@@ -21,6 +21,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/subheading_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/large_margin"
+        android:text="PLAYLIST"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/heading_text_view" />
+
     <ImageView
         android:id="@+id/album_art_image_view"
         android:layout_width="300dp"

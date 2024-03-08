@@ -8,24 +8,24 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import coil.load
 import com.example.spotify.R
-import com.example.spotify.databinding.FragmentPlaylistDetailBinding
+import com.example.spotify.databinding.FragmentArtistDetailBinding
 import com.example.spotify.ui.search.SpotifyViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
-class PlaylistDetailFragment : Fragment() {
+class ArtistDetailFragment : Fragment() {
     private val viewModel: SpotifyViewModel by activityViewModels()
-    private lateinit var binding: FragmentPlaylistDetailBinding
+    private lateinit var binding: FragmentArtistDetailBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.currentPlaylist?.let { playlist ->
-            binding.titleTextView.text = playlist.name
-            binding.descriptionTextView.text = ""+ playlist.description
-            binding.albumArtImageView.load(playlist.thumbnailUrl)
-            binding.subheadingTextView.text = "by " + playlist.owner
-            binding.popularityTextView.text = "Total tracks: " + playlist.numberOfTracks
+        viewModel.currentArtist?.let { artist ->
+            binding.titleTextView.text = artist.name
+            binding.progressBar.progress = artist.popularity
+            binding.titleTextView.text = artist.name
+            binding.descriptionTextView.text = artist.genres
+            binding.subheadingTextView.text = artist.followers.toString() + " Followers"
+            binding.albumArtImageView.load(artist.thumbnailUrl)
         }
     }
 
@@ -34,8 +34,7 @@ class PlaylistDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentPlaylistDetailBinding.inflate(layoutInflater, container, false)
+        binding = FragmentArtistDetailBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
-
 }

@@ -13,10 +13,32 @@
         <action
             android:id="@+id/action_searchFragment_to_trackDetailFragment"
             app:destination="@id/trackDetailFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_playlistDetailFragment"
+            app:destination="@id/playlistDetailFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_albumDetailFragment"
+            app:destination="@id/albumDetailFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_artistDetailFragment"
+            app:destination="@id/artistDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/trackDetailFragment"
         android:name="com.example.spotify.ui.detail.TrackDetailFragment"
         android:label="fragment_track_detail"
         tools:layout="@layout/fragment_track_detail" />
+    <fragment
+        android:id="@+id/playlistDetailFragment"
+        android:name="com.example.spotify.ui.detail.PlaylistDetailFragment"
+        android:label="PlaylistDetailFragment" />
+    <fragment
+        android:id="@+id/albumDetailFragment"
+        android:name="com.example.spotify.ui.detail.AlbumDetailFragment"
+        android:label="AlbumDetailFragment" />
+    <fragment
+        android:id="@+id/artistDetailFragment"
+        android:name="com.example.spotify.ui.detail.ArtistDetailFragment"
+        android:label="fragment_artist_detail"
+        tools:layout="@layout/fragment_artist_detail" />
 </navigation>
