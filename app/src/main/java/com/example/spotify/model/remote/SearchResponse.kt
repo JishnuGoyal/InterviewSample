@@ -1,5 +1,8 @@
 package com.example.spotify.model.remote
 
+import com.example.spotify.model.local.AlbumEntity
+import com.example.spotify.model.local.ArtistEntity
+import com.example.spotify.model.local.PlaylistEntity
 import com.example.spotify.model.local.TrackEntity
 import com.google.gson.annotations.SerializedName
 
@@ -79,7 +82,7 @@ data class TrackItem(
     }
 
     fun toEntity(): TrackEntity {
-        return TrackEntity(id, name, album.images.first().url,popularity, listOfArtists())
+        return TrackEntity(id, name, album.images.first().url, popularity, listOfArtists())
     }
 }
 
@@ -184,7 +187,29 @@ data class ArtistItem(
     val type: String,
     @SerializedName("uri")
     val uri: String
-)
+) {
+    fun listOfGenres(): String {
+        val stringBuilder = StringBuilder()
+        var size = genres.size
+        genres.forEach {
+            stringBuilder.append(it)
+            size--
+            if (size != 0) stringBuilder.append(", ")
+        }
+        return stringBuilder.toString()
+    }
+
+    fun toEntity(): ArtistEntity {
+        return ArtistEntity(
+            id,
+            name,
+            images.first().url,
+            listOfGenres(),
+            followers.total,
+            popularity
+        )
+    }
+}
 
 data class Followers(
     @SerializedName("href")
@@ -237,7 +262,22 @@ data class AlbumItem(
     val uri: String,
     @SerializedName("artists")
     val artists: List<Artist>
-)
+) {
+    fun listOfArtists(): String {
+        val stringBuilder = StringBuilder()
+        var size = artists.size
+        artists.forEach {
+            stringBuilder.append(it.name)
+            size--
+            if (size != 0) stringBuilder.append(", ")
+        }
+        return stringBuilder.toString()
+    }
+
+    fun toEntity(): AlbumEntity {
+        return AlbumEntity(id, name, images.first().url, listOfArtists(), releaseDate)
+    }
+}
 
 data class Playlists(
     @SerializedName("href")
@@ -285,7 +325,12 @@ data class PlaylistItem(
     val uri: String,
     @SerializedName("primary_color")
     val primaryColor: String?
-)
+) {
+
+    fun toEntity(): PlaylistEntity {
+        return PlaylistEntity(id, name, images.first().url, tracks.total, description ?: "", owner.displayName?: "")
+    }
+}
 
 data class Owner(
     @SerializedName("external_urls")

@@ -1,5 +1,6 @@
 package com.example.spotify.ui.search
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,10 +13,10 @@ import androidx.navigation.fragment.findNavController
 import com.example.spotify.R
 import com.example.spotify.SpotifyViewModel
 import com.example.spotify.databinding.FragmentSearchBinding
+import com.example.spotify.model.local.AlbumEntity
+import com.example.spotify.model.local.ArtistEntity
+import com.example.spotify.model.local.PlaylistEntity
 import com.example.spotify.model.local.TrackEntity
-import com.example.spotify.model.remote.AlbumItem
-import com.example.spotify.model.remote.ArtistItem
-import com.example.spotify.model.remote.PlaylistItem
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -32,9 +33,11 @@ class SearchFragment : Fragment(), SearchResultRecyclerAdapter.SearchResultAdapt
     private lateinit var playlistAdapter: SearchResultRecyclerAdapter
     private lateinit var artistAdapter: SearchResultRecyclerAdapter
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // don't call the api immediately.
         var job: Job? = null
         binding.searchInputText.addTextChangedListener { editable ->
             job?.cancel()
@@ -51,6 +54,15 @@ class SearchFragment : Fragment(), SearchResultRecyclerAdapter.SearchResultAdapt
         trackAdapter = SearchResultRecyclerAdapter(this)
         binding.trackRecyclerView.adapter = trackAdapter
 
+        albumAdapter = SearchResultRecyclerAdapter(this)
+        binding.albumRecyclerView.adapter = albumAdapter
+
+        playlistAdapter = SearchResultRecyclerAdapter(this)
+        binding.playlistRecyclerView.adapter = playlistAdapter
+
+        artistAdapter = SearchResultRecyclerAdapter(this)
+        binding.artistRecyclerView.adapter = artistAdapter
+
         viewModel.trackLiveData.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
                 trackAdapter.list.clear()
@@ -60,41 +72,32 @@ class SearchFragment : Fragment(), SearchResultRecyclerAdapter.SearchResultAdapt
             }
         }
 
+        viewModel.albumLiveData.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                albumAdapter.list.clear()
+                albumAdapter.list.add(Headers.ALBUM)
+                albumAdapter.list.addAll(it)
+                albumAdapter.notifyDataSetChanged()
+            }
+        }
 
+        viewModel.playlistLiveData.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                playlistAdapter.list.clear()
+                playlistAdapter.list.add(Headers.PLAYLIST)
+                playlistAdapter.list.addAll(it)
+                playlistAdapter.notifyDataSetChanged()
+            }
+        }
 
-
-
-//        viewModel.searchResult.observe(viewLifecycleOwner) {
-//            binding.loading.visibility = View.VISIBLE
-//            it.data?.let { spotifyResponse ->
-//                adapter.list.clear()
-//                val tracks = spotifyResponse.tracks.items
-//                if (tracks.isNotEmpty()) {
-//                    adapter.list.add(Headers.TRACK)
-//                    adapter.list.addAll(tracks)
-//                }
-//
-//                val albums = spotifyResponse.albums.items
-//                if (albums.isNotEmpty()) {
-//                    adapter.list.add(Headers.ALBUM)
-//                    adapter.list.addAll(albums)
-//                }
-//
-//                val playlists = spotifyResponse.playlists.items
-//                if (albums.isNotEmpty()) {
-//                    adapter.list.add(Headers.PLAYLIST)
-//                    adapter.list.addAll(playlists)
-//                }
-//
-//                val artists = spotifyResponse.artists.items
-//                if (artists.isNotEmpty()) {
-//                    adapter.list.add(Headers.ARTIST)
-//                    adapter.list.addAll(artists)
-//                }
-//                adapter.notifyDataSetChanged()
-//                binding.loading.visibility = View.GONE
-//            }
-//        }
+        viewModel.artistLiveData.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                artistAdapter.list.clear()
+                artistAdapter.list.add(Headers.ARTIST)
+                artistAdapter.list.addAll(it)
+                artistAdapter.notifyDataSetChanged()
+            }
+        }
     }
 
     override fun onCreateView(
@@ -106,21 +109,24 @@ class SearchFragment : Fragment(), SearchResultRecyclerAdapter.SearchResultAdapt
         return binding.root
     }
 
-    override fun onClick(trackItem: TrackEntity) {
-//        viewModel.trackResult.postValue(Resource.Success(trackItem))
+    override fun onClick(albumItem: AlbumEntity) {
+        viewModel.currentAlbum = albumItem
         findNavController().navigate(R.id.action_searchFragment_to_trackDetailFragment)
     }
 
-    override fun onClick(trackItem: AlbumItem) {
-        TODO("Not yet implemented")
+    override fun onClick(playlistItem: PlaylistEntity) {
+        viewModel.currentPlaylist = playlistItem
+        findNavController().navigate(R.id.action_searchFragment_to_trackDetailFragment)
     }
 
-    override fun onClick(trackItem: PlaylistItem) {
-        TODO("Not yet implemented")
+    override fun onClick(artistItem: ArtistEntity) {
+        viewModel.currentArtist = artistItem
+        findNavController().navigate(R.id.action_searchFragment_to_trackDetailFragment)
     }
 
-    override fun onClick(trackItem: ArtistItem) {
-        TODO("Not yet implemented")
+    override fun onClick(trackItem: TrackEntity) {
+        viewModel.currentTrack = trackItem
+        findNavController().navigate(R.id.action_searchFragment_to_trackDetailFragment)
     }
 }
 enum class Headers {

@@ -15,17 +15,15 @@ interface SpotifyDao {
     @Query("SELECT * FROM tracks")
     fun getAllTracks(): LiveData<List<TrackEntity>>
 
-    // Get all albums
-    @Query("SELECT * FROM albums")
-    suspend fun getAllAlbums(): List<AlbumEntity>
-
-    // Get all playlists
-    @Query("SELECT * FROM playlists")
-    suspend fun getAllPlaylists(): List<PlaylistEntity>
-
-    // Get all artists
     @Query("SELECT * FROM artists")
-    suspend fun getAllArtists(): List<ArtistEntity>
+    fun getAllArtists(): LiveData<List<ArtistEntity>>
+
+    @Query("SELECT * FROM playlists")
+    fun getAllPlaylists(): LiveData<List<PlaylistEntity>>
+
+    @Query("SELECT * FROM albums")
+    fun getAllAlbums(): LiveData<List<AlbumEntity>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrack(tracks: List<TrackEntity>)
 

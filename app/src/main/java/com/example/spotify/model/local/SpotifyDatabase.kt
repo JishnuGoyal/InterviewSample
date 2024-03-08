@@ -1,17 +1,10 @@
 package com.example.spotify.model.local
 
 import androidx.room.Database
-import androidx.room.DatabaseConfiguration
-import androidx.room.InvalidationTracker
 import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteOpenHelper
 import com.example.spotify.data.SpotifyDao
-import com.example.spotify.model.remote.AlbumItem
-import com.example.spotify.model.remote.ArtistItem
-import com.example.spotify.model.remote.PlaylistItem
-import com.example.spotify.model.remote.TrackItem
 
-@Database(entities = [TrackEntity::class, ArtistEntity::class, PlaylistEntity::class, AlbumEntity::class], version = 1)
+@Database(entities = [TrackEntity::class, ArtistEntity::class, PlaylistEntity::class, AlbumEntity::class], version = 2)
 abstract class SpotifyDatabase: RoomDatabase() {
     abstract fun spotifyDao(): SpotifyDao
 }

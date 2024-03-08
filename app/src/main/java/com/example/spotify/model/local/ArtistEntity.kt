@@ -7,4 +7,9 @@ import androidx.room.PrimaryKey
 class ArtistEntity (
     @PrimaryKey
     val id: String,
+    val name: String,
+    val thumbnailUrl: String,
+    val genres: String,
+    val followers: Int,
+    val popularity: Int
 )

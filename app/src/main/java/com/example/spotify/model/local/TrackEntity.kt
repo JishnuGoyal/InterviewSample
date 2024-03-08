@@ -1,5 +1,6 @@
 package com.example.spotify.model.local
 
+import androidx.recyclerview.widget.DiffUtil
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

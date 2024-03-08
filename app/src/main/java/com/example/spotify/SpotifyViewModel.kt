@@ -9,6 +9,9 @@ import com.example.spotify.api.ApiServices
 import com.example.spotify.data.SpotifySharedPreferences
 import com.example.spotify.domain.AuthenticationRepository
 import com.example.spotify.domain.Repository
+import com.example.spotify.model.local.AlbumEntity
+import com.example.spotify.model.local.ArtistEntity
+import com.example.spotify.model.local.PlaylistEntity
 import com.example.spotify.model.local.TrackEntity
 import com.example.spotify.model.remote.SpotifyResponse
 import com.example.spotify.model.remote.TrackItem
@@ -26,8 +29,19 @@ class SpotifyViewModel @Inject constructor(
 ) : ViewModel() {
 
     val searchResult: MutableLiveData<Resource<SpotifyResponse>> = MutableLiveData()
-    val trackResult: MutableLiveData<Resource<TrackItem>> = MutableLiveData()
     val trackLiveData = repository.getTracks()
+    val artistLiveData = repository.getArtists()
+    val playlistLiveData = repository.getPlaylists()
+    val albumLiveData = repository.getAlbums()
+
+    // state variables
+    var currentTrack: TrackEntity? = null
+
+    var currentAlbum: AlbumEntity? = null
+
+    var currentPlaylist: PlaylistEntity? = null
+
+    var currentArtist: ArtistEntity? = null
 
     fun search(query: String) = viewModelScope.launch {
         searchResult.postValue(Resource.Loading())
@@ -37,11 +51,34 @@ class SpotifyViewModel @Inject constructor(
         if (response.isSuccessful) {
             response.body()?.let { searchResponse ->
                 repository.deleteTracks()
+                repository.deleteAlbums()
+                repository.deletePlaylists()
+                repository.deleteArtists()
+
                 repository.insertTracks(
                     searchResponse.tracks.items.map {
                         it.toEntity()
                     }.toList()
                 )
+                repository.insertAlbums(
+                    searchResponse.albums.items.map {
+                        it.toEntity()
+                    }.toList()
+                )
+
+                repository.insertPlaylists(
+                    searchResponse.playlists.items.map {
+                        it.toEntity()
+                    }.toList()
+                )
+
+                repository.insertArtists(
+                    searchResponse.artists.items.map {
+                        it.toEntity()
+                    }.toList()
+                )
+
+
                 return@launch searchResult.postValue(Resource.Success(searchResponse))
             }
         }

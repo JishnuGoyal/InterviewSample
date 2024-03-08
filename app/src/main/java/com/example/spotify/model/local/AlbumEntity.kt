@@ -7,4 +7,8 @@ import androidx.room.PrimaryKey
 class AlbumEntity (
     @PrimaryKey
     val id: String,
+    val name: String,
+    val thumbnailUrl: String,
+    val artists: String,
+    val releaseDate: String
 )
