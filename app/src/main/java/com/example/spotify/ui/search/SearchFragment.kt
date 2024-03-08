@@ -11,7 +11,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.spotify.R
-import com.example.spotify.SpotifyViewModel
 import com.example.spotify.databinding.FragmentSearchBinding
 import com.example.spotify.model.local.AlbumEntity
 import com.example.spotify.model.local.ArtistEntity

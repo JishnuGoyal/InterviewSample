@@ -1,7 +1,7 @@
 package com.example.spotify.domain
 
 import androidx.lifecycle.MutableLiveData
-import com.example.spotify.api.ApiServices
+import com.example.spotify.data.api.ApiServices
 import com.example.spotify.data.SpotifyDao
 import com.example.spotify.model.local.AlbumEntity
 import com.example.spotify.model.local.ArtistEntity

@@ -1,4 +1,4 @@
-package com.example.spotify.api
+package com.example.spotify.data.api
 
 import com.example.spotify.model.remote.TokenResponse
 import okhttp3.RequestBody

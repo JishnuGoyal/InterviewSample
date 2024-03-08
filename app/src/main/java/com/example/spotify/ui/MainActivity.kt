@@ -1,10 +1,11 @@
-package com.example.spotify
+package com.example.spotify.ui
 
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.spotify.databinding.ActivityMainBinding
+import com.example.spotify.ui.search.SpotifyViewModel
 import com.example.spotify.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
 

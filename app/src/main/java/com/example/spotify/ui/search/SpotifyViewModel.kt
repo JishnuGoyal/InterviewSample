@@ -1,4 +1,4 @@
-package com.example.spotify
+package com.example.spotify.ui.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

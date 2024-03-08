@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import coil.load
-import com.example.spotify.SpotifyViewModel
+import com.example.spotify.ui.search.SpotifyViewModel
 import com.example.spotify.databinding.FragmentTrackDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -1,7 +1,7 @@
 package com.example.spotify.di
 
-import com.example.spotify.api.ApiServices
-import com.example.spotify.api.Authentication
+import com.example.spotify.data.api.ApiServices
+import com.example.spotify.data.api.Authentication
 import com.example.spotify.util.AUTH_TOKEN_URL
 import com.example.spotify.util.BASE_URL
 import dagger.Module

@@ -1,7 +1,7 @@
 package com.example.spotify.domain
 
 import android.util.Log
-import com.example.spotify.api.Authentication
+import com.example.spotify.data.api.Authentication
 import com.example.spotify.data.SpotifySharedPreferences
 import com.example.spotify.model.remote.TokenResponse
 import com.example.spotify.util.grantType
